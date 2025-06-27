@@ -1,4 +1,4 @@
-//Grupo 1  Octaviano Sznajdleder,Roman Otero, Adam Bairros 
+//Grupo 1  Román Otero, Octaviano Sznajdleder, Adam Bairros 
 
 
 #include <Preferences.h>
@@ -46,8 +46,8 @@ void setup() {
   Serial.println(F("DHTxx test!"));
   u8g2.begin();
   dht.begin();
-  preferences.begin("memoria", false);
-  valorU = preferences.getUInt("valorUmbral", 23);     
+  preferences.begin("memoria", false);                  //inicia la memoria, llamada memoria, y permite que lea y modifique datos.
+  valorU = preferences.getUInt("valorUmbral", 23);     //iguala valorU a lo que estaba guardado previamente en valorUmbral, o si no hay nada se iguala a 23
 
 
 }
@@ -61,7 +61,7 @@ void loop() {
       Serial.println(F("Failed to read from DHT sensor!"));
       return;
     }
-
+    
     if (temp >= valorU) {
       digitalWrite(LED, HIGH);
     }
@@ -83,13 +83,13 @@ void loop() {
       printBMP_OLED();
       if (digitalRead(BOTON1) == LOW) {
         Serial.println("boton 1 pres");
-        millis_valor = millis();
+        millis_valor = millis();   // 5000s
         estado = ESPERA1;
       }
 
       break;
     case ESPERA1:
-      millis_actual = millis();
+      millis_actual = millis();     //10000s
 
       if (millis_actual - millis_valor  >= 5000) {
         Serial.println("pasaron 5 seg");
@@ -122,7 +122,7 @@ void loop() {
     case ESPERA2:
 
       if (digitalRead(BOTON2) == HIGH) {
-        preferences.putUInt("valorUmbral", valorU);
+        preferences.putUInt("valorUmbral", valorU);           //guarda en valorUmbral el valorU actual al volver a pantalla 1
         Serial.print("Se guardo valor umbral: ");
         Serial.println(valorU);
 
@@ -175,10 +175,10 @@ void printBMP_OLED(void) {
   sprintf (stringU, "%d" , valorU); ///convierto el valor float a string
   u8g2.drawStr(0, 35, "T. Actual:");
   u8g2.drawStr(60, 35, stringtemp);
-  u8g2.drawStr(90, 35, "°C");
+  u8g2.drawStr(90, 35, " C");
   u8g2.drawStr(0, 50, "V. Umbral:");
   u8g2.drawStr(60, 50, stringU);
-  u8g2.drawStr(75, 50, "°C");
+  u8g2.drawStr(75, 50, " C");
   u8g2.sendBuffer();          // transfer internal memory to the display
 }
 
@@ -189,6 +189,6 @@ void printBMP_OLED2(void) {
   u8g2.setFont(u8g2_font_t0_11b_tr); // choose a suitable font
   u8g2.drawStr(0, 50, "V. Umbral:");
   u8g2.drawStr(60, 50, stringU);
-  u8g2.drawStr(75, 50, "°C");
+  u8g2.drawStr(75, 50, " C");
   u8g2.sendBuffer();          // transfer internal memory to the display
 }
